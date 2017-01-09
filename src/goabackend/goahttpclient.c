@@ -299,6 +299,7 @@ goa_http_client_check_finish (GoaHttpClient *self, GAsyncResult *res, GError **e
 {
   GTask *task;
 
+  g_return_val_if_fail (GOA_IS_HTTP_CLIENT (self), FALSE);
   g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   g_return_val_if_fail (g_task_is_valid (res, self), FALSE);
@@ -338,6 +339,13 @@ goa_http_client_check_sync (GoaHttpClient       *self,
 {
   CheckSyncData data;
   GMainContext *context = NULL;
+
+  g_return_val_if_fail (GOA_IS_HTTP_CLIENT (self), FALSE);
+  g_return_val_if_fail (uri != NULL && uri[0] != '\0', FALSE);
+  g_return_val_if_fail (username != NULL && username[0] != '\0', FALSE);
+  g_return_val_if_fail (password != NULL && password[0] != '\0', FALSE);
+  g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   data.error = error;
 
