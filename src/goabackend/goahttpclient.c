@@ -206,6 +206,12 @@ http_client_check_response_cb (SoupSession *session, SoupMessage *msg, gpointer 
   if (error != NULL)
     g_simple_async_result_take_error (data->res, error);
 
+  /* We might be invoked from a GCancellable::cancelled
+   * handler, and freeing CheckData will disconnect the handler. Since
+   * disconnecting from inside the handler will cause a deadlock, we
+   * use an idle handler to break them up.
+   */
+
   source = g_idle_source_new ();
   g_source_set_priority (source, G_PRIORITY_DEFAULT_IDLE);
   g_source_set_callback (source, http_client_check_complete_and_free_in_idle, data, NULL);
